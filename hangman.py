@@ -82,40 +82,63 @@ hangman_art = {
 def display_man(wrong_guesses):
     print(hangman_art.get(wrong_guesses))
 
-def display_hint(hint):
-    for char in hint:
-        print(char, end=" ")
-    print() 
-    print()
 
-def display_answer():
-    pass
+def display_hint(hint):
+    print(" ".join(hint))
+
+
+def display_answer(answer):
+    print("The correct answer was: "+" ".join(answer))
+
 
 def main():
     answer = random.choice(words)
-    hint = "_" * len(answer)
+    hint = list("_" * len(answer))
     wrong_guesses = 0
+    guesseed_letters = []
     game_over = False
     
-    print("Welcome to Python Hangman")
+    print()
+    print("-------------------------------")
+    print("|  Welcome to Python Hangman! |")
+    print("-------------------------------")
 
     while not game_over:
         
         display_man(wrong_guesses)
         display_hint(hint)
 
+        print()
+        print(f"{6-wrong_guesses} incorrect guesses left")
         guess = input("Enter a letter guess: ").lower()
-        if guess in answer:
-            for char in answer:
-                if char == guess:
-                    print()
+        print()
+
+        if guess in guesseed_letters:
+            print("You've already guessed this letter")
         else:
-            wrong_guesses += 1
-            if wrong_guesses == 6:
-                display_answer()
-                break
+            guesseed_letters.append(guess)
+        
+            if guess in answer:
+                for i in range(0,len(answer)):
+                    if answer[i] == guess:
+                        hint[i] = guess
+            else:
+                wrong_guesses += 1
+                if wrong_guesses == 6:
+                    display_man(wrong_guesses)
+                    print()
+                    display_answer(answer)
+                    break
+
+        if "_" not in hint:
+            print("-------------------------------")
+            print("Well done you got it!")
+            display_answer(answer)
+            game_over = True
 
     print("Game over!")
+    print("-------------------------------")
+
 
 if __name__ == "__main__":
     main()
